@@ -22,11 +22,11 @@ module.exports = {
         allowNull: false,
         references: { model: 'teams', key: 'id'}
       },
-      away_teams_goals: {
+      away_team_goals: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      in_progres: {
+      in_progress: {
         type: Sequelize.BOOLEAN,
         allowNull: false
       },
