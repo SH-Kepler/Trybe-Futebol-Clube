@@ -3,4 +3,4 @@ WORKDIR /app-backend
 EXPOSE 3001
 COPY . /app-backend/
 RUN npm i
-ENTRYPOINT ["npm", "start"]
+ENTRYPOINT ["npm", "run", "dev"]
