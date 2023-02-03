@@ -2,11 +2,11 @@ import { DataTypes, Model } from 'sequelize';
 import db from '.';
 
 class Users extends Model {
-  id!: number;
-  user!: string;
-  role!: string;
-  email!: string;
-  password!: string;
+  declare id: number;
+  declare username: string;
+  declare role: string;
+  declare email: string;
+  declare password: string;
 }
 
 Users.init({
@@ -16,7 +16,7 @@ Users.init({
     primaryKey: true,
     type: DataTypes.INTEGER,
   },
-  user: {
+  username: {
     type: DataTypes.STRING,
     allowNull: false,
   },

@@ -8,14 +8,10 @@ import JWT from '../middlewares/jwtAuthentication';
 const jwt = new JWT();
 
 export default class UsersService {
-  constructor(
-    private _userModel = Users,
-  ) {}
-
-  async login(user: ILogin) {
+  static async login(user: ILogin) {
     const { email, password } = user;
 
-    const userExist = await this._userModel.findOne({ where: { email } });
+    const userExist = await Users.findOne({ where: { email } });
     if (!userExist) {
       throw new HttpException(401, emailOrPasswordIncorrect);
     }
@@ -25,6 +21,7 @@ export default class UsersService {
       throw new HttpException(401, emailOrPasswordIncorrect);
     }
 
-    return jwt.createToken(userExist);
+    const token = jwt.createToken(user);
+    return { status: 200, message: { token } };
   }
 }
