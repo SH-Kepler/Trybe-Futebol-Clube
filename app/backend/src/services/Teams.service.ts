@@ -6,4 +6,10 @@ export default class TeamsService {
 
     return { status: 200, message: teams };
   }
+
+  static async getTeam(id: string) {
+    const team = await Teams.findByPk(id);
+
+    return { status: 200, message: team };
+  }
 }
