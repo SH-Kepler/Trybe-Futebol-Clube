@@ -24,4 +24,14 @@ export default class UsersService {
     const token = jwt.createToken(user);
     return { status: 200, message: { token } };
   }
+
+  static async getRole(email: string) {
+    const user = await Users.findOne({ where: { email } });
+
+    if (user) {
+      return { status: 200, role: user.role };
+    }
+
+    throw new HttpException(401, 'Token not found');
+  }
 }
