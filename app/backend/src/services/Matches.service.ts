@@ -24,4 +24,10 @@ export default class MatchesService {
 
     return { status: 201, message: newMatch };
   }
+
+  static async updateMatch(id: string) {
+    const match = await Matches.update({ inProgress: false }, { where: { id } });
+
+    return { status: 200, message: 'Finished', match };
+  }
 }
