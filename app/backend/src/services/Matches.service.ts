@@ -1,3 +1,4 @@
+import { IMatch } from '../interfaces';
 import Teams from '../database/models/Teams';
 import Matches from '../database/models/Matches';
 
@@ -16,5 +17,11 @@ export default class MatchesService {
     });
 
     return { status: 200, message: matches };
+  }
+
+  static async createNewMatch(match: IMatch) {
+    const newMatch = Matches.create({ ...match, inProgress: true });
+
+    return { status: 201, message: newMatch };
   }
 }
