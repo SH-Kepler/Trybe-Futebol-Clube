@@ -4,10 +4,15 @@ export interface ILogin {
 }
 
 export interface IMatch {
-  id?: number;
-  homeTeamId: number;
-  homeTeamGoals: number;
-  awayTeamId: number;
-  awayTeamGoals: number;
-  inProgress?: boolean;
+  id?: number,
+  homeTeamId: number,
+  homeTeamGoals: number,
+  awayTeamId: number,
+  awayTeamGoals: number,
+  inProgress?: boolean
+}
+
+export interface ITeamsId {
+  homeTeamGoals: number,
+  awayTeamGoals: number
 }
