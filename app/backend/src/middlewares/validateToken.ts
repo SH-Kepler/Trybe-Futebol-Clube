@@ -12,9 +12,12 @@ export default class ValidateToken {
       throw new HttpException(401, 'Token not found');
     }
 
-    const payload = jwt.tokenAuthorization(authorization);
-    req.body.user = payload;
-
-    next();
+    try {
+      const payload = jwt.tokenAuthorization(authorization);
+      req.body.user = payload;
+      next();
+    } catch (error) {
+      throw new HttpException(401, 'Token must be a valid token');
+    }
   };
 }
