@@ -18,4 +18,12 @@ export default class MatchesController {
 
     return res.status(status).json((await message).dataValues);
   }
+
+  static async updateMatch(req: Request, res: Response) {
+    const { id } = req.params;
+
+    const { status, message } = await MatchesService.updateMatch(id);
+
+    return res.status(status).json({ message });
+  }
 }
