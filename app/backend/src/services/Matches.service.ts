@@ -1,4 +1,4 @@
-import { IMatch } from '../interfaces';
+import { IMatch, ITeamsId } from '../interfaces';
 import Teams from '../database/models/Teams';
 import Matches from '../database/models/Matches';
 
@@ -29,5 +29,18 @@ export default class MatchesService {
     const match = await Matches.update({ inProgress: false }, { where: { id } });
 
     return { status: 200, message: 'Finished', match };
+  }
+
+  static async updateMatchInProgress(id: string, teamsId: ITeamsId) {
+    const match = await Matches.findByPk(id);
+
+    if (match) {
+      match.homeTeamGoals = teamsId.homeTeamGoals;
+      match.awayTeamGoals = teamsId.awayTeamGoals;
+
+      await match.save();
+    }
+
+    return { status: 200, match };
   }
 }
