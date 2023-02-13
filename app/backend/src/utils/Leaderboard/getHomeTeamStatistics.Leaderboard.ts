@@ -1,18 +1,17 @@
 import Matches from '../../database/models/Matches';
 import { ILeaderboard, IMatch, IPoints, ITeams } from '../../interfaces';
 
-export default class GetHomeTeamStatistics {
-  static async allStatistics(team: ITeams): Promise<ILeaderboard> {
-    const matches = await Matches.findAll({
-      where: { homeTeamId: team.id, inProgress: false },
-    });
+export default class GetTeamStatistics {
+  static async allStatistics(team: ITeams, param: 'home' | 'away'): Promise<ILeaderboard> {
+    const matches = await Matches
+      .findAll({ where: { [`${param}TeamId`]: team.id, inProgress: false } });
 
-    const points = matches.map(GetHomeTeamStatistics.calculatePoints);
+    const points = matches.map(GetTeamStatistics.calculatePoints);
 
-    const totalPoints = GetHomeTeamStatistics.totalPoints(points);
+    const totalPoints = GetTeamStatistics.totalPoints(points, param);
     const totalGames = matches.length;
-    const results = GetHomeTeamStatistics.getResults(points);
-    const goals = GetHomeTeamStatistics.getGoals(matches);
+    const results = GetTeamStatistics.getResults(points, param);
+    const goals = GetTeamStatistics.getGoals(matches, param);
     const efficiency = ((totalPoints / (totalGames * 3)) * 100).toFixed(2);
 
     return {
@@ -35,21 +34,24 @@ export default class GetHomeTeamStatistics {
     return { homeTeamPoints: 1, awayTeamPoints: 1, win: 'draw' };
   }
 
-  static totalPoints(points: IPoints[]) {
-    return points.reduce((curr, acc) => curr + acc.homeTeamPoints, 0);
+  static totalPoints(points: IPoints[], param: 'home' | 'away') {
+    return points.reduce((curr, acc) => curr + acc[`${param}TeamPoints`], 0);
   }
 
-  static getResults(points: IPoints[]) {
+  static getResults(points: IPoints[], param: 'home' | 'away') {
+    const away = param === 'home' ? 'away' : 'home';
+
     return {
-      totalVictories: points.filter(({ win }) => win === 'home').length,
+      totalVictories: points.filter(({ win }) => win === param).length,
       totalDraws: points.filter(({ win }) => win === 'draw').length,
-      totalLosses: points.filter(({ win }) => win === 'away').length,
+      totalLosses: points.filter(({ win }) => win === away).length,
     };
   }
 
-  static getGoals(matches: IMatch[]) {
-    const goalsFavor = matches.map(({ homeTeamGoals }) => homeTeamGoals).reduce((a, b) => a + b);
-    const goalsOwn = matches.map(({ awayTeamGoals }) => awayTeamGoals).reduce((a, b) => a + b);
+  static getGoals(matches: IMatch[], param: 'home' | 'away') {
+    const away = param === 'home' ? 'away' : 'home';
+    const goalsFavor = matches.map((match) => match[`${param}TeamGoals`]).reduce((a, b) => a + b);
+    const goalsOwn = matches.map((match) => match[`${away}TeamGoals`]).reduce((a, b) => a + b);
     const goalsBalance = goalsFavor - goalsOwn;
 
     return { goalsFavor, goalsOwn, goalsBalance };
