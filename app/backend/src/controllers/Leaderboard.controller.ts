@@ -13,4 +13,10 @@ export default class LeaderboardController {
 
     return res.status(status).json(teams);
   }
+
+  static async getCompleteTeamLeaderboard(req: Request, res:Response) {
+    const { status, teams } = await LeaderboardService.getCompleteTeamLeaderboard();
+
+    return res.status(status).json(teams);
+  }
 }

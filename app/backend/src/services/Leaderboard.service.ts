@@ -13,4 +13,16 @@ export default class LeaderboardService {
 
     return { status: 200, teams: sortTeams };
   }
+
+  static async getCompleteTeamLeaderboard() {
+    const teams = await TeamsService.getAllTeams();
+    const homeTeams = await Promise
+      .all(teams.message.map(async (team) => GetTeamStatistics.allStatistics(team, 'home')));
+    const awayTeams = await Promise
+      .all(teams.message.map(async (team) => GetTeamStatistics.allStatistics(team, 'away')));
+    const team = GetTeamStatistics.generalStatistics(homeTeams, awayTeams);
+    const sortTeams = await Promise.all(GetTeamStatistics.sortTeams(team));
+
+    return { status: 200, teams: sortTeams };
+  }
 }

@@ -57,6 +57,29 @@ export default class GetTeamStatistics {
     return { goalsFavor, goalsOwn, goalsBalance };
   }
 
+  static generalStatistics(infoA: ILeaderboard[], infoB: ILeaderboard[]) {
+    return infoA.map((home) => {
+      const away = infoB.find(({ name }) => name === home.name);
+      if (!away) return home;
+
+      const efficiency = (((home.totalPoints + away.totalPoints)
+      / ((home.totalGames + away.totalGames) * 3)) * 100).toFixed(2);
+
+      return {
+        name: home.name,
+        totalPoints: home.totalPoints + away.totalPoints,
+        totalGames: home.totalGames + away.totalGames,
+        totalVictories: home.totalVictories + away.totalVictories,
+        totalDraws: home.totalDraws + away.totalDraws,
+        totalLosses: home.totalLosses + away.totalLosses,
+        goalsFavor: home.goalsFavor + away.goalsFavor,
+        goalsOwn: home.goalsOwn + away.goalsOwn,
+        goalsBalance: home.goalsBalance + away.goalsBalance,
+        efficiency,
+      };
+    });
+  }
+
   static sortTeams(teams: ILeaderboard[]) {
     return teams.sort((a, b) =>
       b.totalPoints - a.totalPoints
